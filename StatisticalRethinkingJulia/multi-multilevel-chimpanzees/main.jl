@@ -9,8 +9,13 @@ using DataFrames
 
 Random.seed!(1)
 
-path = joinpath(@__DIR__, "data.csv") 
-df = CSV.read(path, DataFrame; delim=';');
+path = joinpath(@__DIR__, "data.csv")
+
+function read_data(path)
+    df = CSV.read(path, DataFrame; delim=';');
+
+    return df
+end
 
 # ## Model
 
@@ -45,8 +50,17 @@ end;
 
 # ## Output
 
+function get_input(_input)
+    if _input === nothing
+        _data_path = path
+    else
+        _data_path = _input.file
+    end
+    return read_data(_data_path)
+end
+
 function model(_input)
-    _input == nothing && (_input = df)
+    _input = get_input(_input)
     _model =     m12_5(_input.pulled_left, _input.actor, _input.block, _input.condition, _input.prosoc_left)
     return _model
 end

@@ -14,13 +14,18 @@ using Turing
 
 Random.seed!(1)
 
-data_path = joinpath(@__DIR__, "data.csv") 
-df = CSV.read(data_path, DataFrame; delim=';')
+data_path = joinpath(@__DIR__, "data.csv")
 
-dept_map = Dict(key => idx for (idx, key) in enumerate(unique(df.dept)))
-df.male = [g == "male" ? 1 : 0 for g in df.gender]
-df.dept_id = [dept_map[de] for de in df.dept]
-df
+function read_data(data_path)
+    df = CSV.read(data_path, DataFrame; delim=';')
+
+    dept_map = Dict(key => idx for (idx, key) in enumerate(unique(df.dept)))
+    df.male = [g == "male" ? 1 : 0 for g in df.gender]
+    df.dept_id = [dept_map[de] for de in df.dept]
+
+    return df
+end
+
 
 # ## Model
 
@@ -28,16 +33,25 @@ df
     sigma_dept ~ truncated(Cauchy(0, 2), 0, Inf)
     a ~ Normal(0, 10)
     a_dept ~ filldist(Normal(a, sigma_dept), 6)
-    
+
     logit_p = a_dept[dept_id]
-    
+
     admit .~ BinomialLogit.(applications, logit_p)
 end;
 
 # ## Output
 
+function get_input(_input)
+    if _input === nothing
+        _data_path = data_path
+    else
+        _data_path = _input.file
+    end
+    return read_data(_data_path)
+end
+
 function model(_input)
-    _input == nothing && (_input = df)
+    _input = get_input(_input)
     _model =     m13_4(_input.applications, _input.dept_id, _input.male, _input.admit)
     return _model
 end

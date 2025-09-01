@@ -11,8 +11,12 @@ using Turing
 
 Random.seed!(1)
 
-file_path = joinpath(@__DIR__, "data.csv") 
-df = CSV.read(file_path, DataFrame; delim=';')
+file_path = joinpath(@__DIR__, "data.csv")
+
+function read_data(data_path)
+    df = CSV.read(data_path, DataFrame; delim=';')
+    return df
+end
 
 # ## Model
 
@@ -30,8 +34,17 @@ end;
 
 # ## Output
 
+function get_input(_input)
+    if _input === nothing
+        _data_path = file_path
+    else
+        _data_path = _input.file
+    end
+    return read_data(_data_path)
+end
+
 function model(_input)
-    _input == nothing && (_input = df)
+    _input = get_input(_input)
     _model = m_pois(_input.admit, _input.reject)
     return _model
 end

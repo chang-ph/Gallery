@@ -44,10 +44,10 @@ end
 
 function get_input(_input)
     if _input === nothing
-        println("### using default input")
+        @info "using default input"
         _data_path = data_path
     else
-        println("### using user input from ", _input.file)
+        @info "using user input from $(_input.file)"
         _data_path = _input.file
     end
     return read_data(_data_path)

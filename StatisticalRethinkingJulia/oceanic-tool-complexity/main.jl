@@ -17,7 +17,6 @@ function read_data(data_path)
 
     df.log_pop = log.(df.population)
     df.contact_high = [contact == "high" ? 1 : 0 for contact in df.contact]
-    df
 
     return df
 end
@@ -48,11 +47,12 @@ function get_input(_input)
         _data_path = _input.file
     end
     return read_data(_data_path)
+
 end
 
 function model(_input)
     _input = get_input(_input)
-    _model =     m10_10stan(_input.total_tools, _input.log_pop, _input.contact_high)
+    _model = m10_10stan(_input.total_tools, _input.log_pop, _input.contact_high)
     return _model
 end
 

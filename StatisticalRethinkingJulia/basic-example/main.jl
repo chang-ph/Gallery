@@ -1,4 +1,6 @@
-# auto-generated
+"""
+This model is from https://github.com/vectorly-ai/Gallery/tree/main/StatisticalRethinkingJulia/basic-example
+"""
 
 
 # We define a simple Gaussian model with unknown mean and variance.

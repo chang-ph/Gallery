@@ -1,4 +1,9 @@
-# auto-generated
+"""
+This model is from https://github.com/vectorly-ai/Gallery/tree/main/StatisticalRethinkingJulia/estimate-handedness-chimpanzees.
+The data it needs is also in that directory (https://github.com/vectorly-ai/Gallery/blob/main/StatisticalRethinkingJulia/estimate-handedness-chimpanzees/data.csv).
+If you don't provide any data in the workflow, that data will be used by default.
+If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
+"""
 
 # ## Data
 

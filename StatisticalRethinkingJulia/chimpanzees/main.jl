@@ -5,26 +5,22 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
+using Pkg
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-import CSV
-import Random
-
-using DataFrames
-
-Random.seed!(1)
-
-file_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';')
-    return df
-end
-
-# ## Model
-
-using StatsFuns
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+using StatsFuns
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+    return [df.pulled_left, df.condition, df.prosoc_left]
+end
 
 @model function m10_3(y, x₁, x₂)
     α ~ Normal(0, 10)
@@ -35,20 +31,4 @@ using Turing
     y .~ BinomialLogit.(1, logits)
 end
 
-# ## Output
-
-function get_input(_input)
-    if _input === nothing
-        _data_path = file_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model = m10_3(_input.pulled_left, _input.condition, _input.prosoc_left)
-    return _model
-end
-
+flow.model = m10_3

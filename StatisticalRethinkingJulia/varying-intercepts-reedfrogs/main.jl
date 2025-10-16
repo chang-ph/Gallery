@@ -5,28 +5,29 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-import CSV
-import Random
-
+using Coinfer
 using DataFrames
-
-Random.seed!(1)
-
-data_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';');
-    @assert size(df) == (48, 5) ## hide
-    df.tank_index = 1:nrow(df)
-    return df
-end
-
-# ## Model
-
+using CSV
+using Random
 using Turing
 using StatsFuns: logistic
+
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';');
+    @assert size(df) == (48, 5) ## hide
+    df.tank_index = 1:nrow(df)
+    return (df.density, df.tank_index, df.surv)
+end
 
 @model function reedfrogs(Nᵢ, i, Sᵢ)
     αₜₐₙₖ ~ filldist(Normal(0, 1.5), length(i))
@@ -34,21 +35,4 @@ using StatsFuns: logistic
     Sᵢ .~ Binomial.(Nᵢ, pᵢ)
 end;
 
-# ## Output
-
-n = nrow(df)
-function get_input(_input)
-    if _input === nothing
-        _data_path = data_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model = reedfrogs(_input.density, _input.tank_index, _input.surv)
-    return _model
-end
-
+flow.model = reedfrogs

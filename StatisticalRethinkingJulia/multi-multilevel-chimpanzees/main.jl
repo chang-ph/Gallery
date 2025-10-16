@@ -5,26 +5,24 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
-
-import CSV
-import Random
-
-using DataFrames
-
-Random.seed!(1)
-
-path = joinpath(@__DIR__, "data.csv")
-
-function read_data(path)
-    df = CSV.read(path, DataFrame; delim=';');
-
-    return df
-end
-
-# ## Model
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+    return (df.pulled_left, df.actor, df.block, df.condition, df.prosoc_left)
+end
 
 @model function m12_5(pulled_left, actor, block, condition, prosoc_left)
     ## Total num of y
@@ -53,20 +51,4 @@ using Turing
     pulled_left .~ BinomialLogit.(1, logitp)
 end;
 
-# ## Output
-
-function get_input(_input)
-    if _input === nothing
-        _data_path = path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model =     m12_5(_input.pulled_left, _input.actor, _input.block, _input.condition, _input.prosoc_left)
-    return _model
-end
-
+flow.model = m12_5

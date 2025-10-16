@@ -5,17 +5,22 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-using DataFrames
 using Turing
+using Coinfer
+using DataFrames
+using CSV
 
-import CSV
+flow = Coinfer.ServerlessBayes.current_workflow()
 
-data_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';')
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
 
     df.log_gdp = log.(df.rgdppc_2000)
     dropmissing!(df)
@@ -26,9 +31,8 @@ function read_data(data_path)
     df.rugged_std = df.rugged ./ maximum(df.rugged)
 
     first(df, 8)
-    return df
+    return [df.log_gdp_std, df.rugged_std, mean(df.rugged_std)]
 end
-# ## Model
 
 @model function model_fn(log_gdp_std, rugged_std, mean_rugged)
     α ~ Normal(1, 0.1)
@@ -39,18 +43,4 @@ end
     log_gdp_std ~ MvNormal(μ, σ)
 end
 
-function get_input(_input)
-    if _input === nothing
-        _data_path = data_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model = model_fn(_input.log_gdp, _input.rugged_std, mean(_input.rugged_std))
-    return _model
-end
-
+flow.model = model_fn

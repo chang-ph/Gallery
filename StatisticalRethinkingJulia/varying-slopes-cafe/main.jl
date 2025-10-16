@@ -5,27 +5,24 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
-
-import CSV
-import Random
-
-using DataFrames
-
-Random.seed!(1)
-
-data_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame);
-    return df
-end
-
-# DataFrame `df` is shown Section [df](#df).
-
-# ## Model
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame);
+    return (df.cafe, df.afternoon, df.wait)
+end
 
 @model function m13_1(cafe, afternoon, wait)
     Rho ~ LKJ(2, 1.)
@@ -46,20 +43,4 @@ using Turing
     wait ~ MvNormal(μ, sigma)
 end;
 
-# ## Output
-
-function get_input(_input)
-    if _input === nothing
-        _data_path = data_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model =     m13_1(_input.cafe, _input.afternoon, _input.wait)
-    return _model
-end
-
+flow.model = m13_1

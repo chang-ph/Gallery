@@ -5,22 +5,24 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-import CSV
-
+using Coinfer
 using DataFrames
-
-data_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';');
-    return df
-end
-
-# ## Model
-
+using CSV
 using Turing
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';');
+    return (df.pulled_left, df.actor, df.condition, df.prosoc_left)
+end
 
 @model function m12_4(pulled_left, actor, condition, prosoc_left)
     ## Total num of y
@@ -46,20 +48,4 @@ using Turing
     pulled_left .~ BinomialLogit.(1, logitp)
 end;
 
-# ## Output
-
-function get_input(_input)
-    if _input === nothing
-        _data_path = data_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model =     m12_4(_input.pulled_left, _input.actor, _input.condition, _input.prosoc_left)
-    return _model
-end
-
+flow.model = m12_4

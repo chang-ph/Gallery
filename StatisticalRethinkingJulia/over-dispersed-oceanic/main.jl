@@ -5,27 +5,26 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
-
-import CSV
-import Random
-
-using DataFrames
-
-Random.seed!(1)
-
-path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';')
-    df.log_pop = log.(df.population)
-    df.society = 1:nrow(df)
-    return df
-end
-
-# ## Model
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+    df.log_pop = log.(df.population)
+    df.society = 1:nrow(df)
+    return (df.total_tools, df.log_pop, df.society)
+end
 
 @model function m12_6(total_tools, log_pop, society)
     N = length(total_tools)
@@ -45,20 +44,4 @@ using Turing
     end
 end;
 
-# ## Output
-
-function get_input(_input)
-    if _input === nothing
-        _data_path = path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model =     m12_6(_input.total_tools, _input.log_pop, _input.society)
-    return _model
-end
-
+flow.model = m12_6

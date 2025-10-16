@@ -2,20 +2,27 @@
 This model is from https://github.com/vectorly-ai/Gallery/tree/main/StatisticalRethinkingJulia/non-identifiable
 """
 
-# ## Data
-
-using Distributions
-using Random
-
-Random.seed!(1)
-y = rand(Normal(0,1), 100);
-
-# ## Model
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+
+flow = Coinfer.ServerlessBayes.current_workflow()
+
+function interpret_data(data)
+    y = rand(Normal(0,1), 100);
+    return [y]
+end
 
 @model function m8_4(y)
-    ## Can't really set a Uniform[-Inf,Inf] on σ 
+    ## Can't really set a Uniform[-Inf,Inf] on σ
     α₁ ~ Uniform(-3000, 1000)
     α₂ ~ Uniform(-1000, 3000)
     σ ~ truncated(Cauchy(0,1), 0, Inf)
@@ -23,9 +30,4 @@ using Turing
     y ~ Normal(α₁ + α₂, σ)
 end
 
-function model(_input)
-    
-    _model = m8_4(y)
-    return _model
-end
-
+flow.model = m8_4

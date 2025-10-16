@@ -2,32 +2,39 @@
 This model is from https://github.com/vectorly-ai/Gallery/tree/main/StatisticalRethinkingJulia/partial-pooling-estimates
 """
 
-# ## Data
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-import Random
-
-using DataFrames
-using StatsFuns: logistic
 using Turing
+using Coinfer
+using DataFrames
+using CSV
+using StatsFuns: logistic
 
-Random.seed!(1)
+flow = Coinfer.ServerlessBayes.current_workflow()
 
-μ = 1.4
-σ = 1.5
-nponds = 60
-ni = repeat([5,10,25,35], inner=15)
+function interpret_data(data)
+    μ = 1.4
+    σ = 1.5
+    nponds = 60
+    ni = repeat([5,10,25,35], inner=15)
 
-a_pond = rand(Normal(μ, σ), nponds)
+    a_pond = rand(Normal(μ, σ), nponds)
 
-dsim = DataFrame(pond = 1:nponds, ni = ni, true_a = a_pond)
+    dsim = DataFrame(pond = 1:nponds, ni = ni, true_a = a_pond)
 
-prob = logistic.(dsim.true_a)
+    prob = logistic.(dsim.true_a)
 
-dsim.s = [rand(Binomial(ni[i], prob[i])) for i in 1:nponds]
+    dsim.s = [rand(Binomial(ni[i], prob[i])) for i in 1:nponds]
 
-dsim.p_nopool = dsim.s ./ dsim.ni;
+    dsim.p_nopool = dsim.s ./ dsim.ni;
 
-# ## Model
+    return (dsim.pond, dsim.s, dsim.ni)
+end
 
 @model function m12_3(pond, s, ni)
     σ ~ truncated(Cauchy(0, 1), 0, Inf)
@@ -41,11 +48,4 @@ dsim.p_nopool = dsim.s ./ dsim.ni;
     s .~ BinomialLogit.(ni, logitp)
 end;
 
-# ## Output
-
-function model(_input)
-    
-    _model =     m12_3(dsim.pond, dsim.s, dsim.ni)
-    return _model
-end
-
+flow.model = m12_3

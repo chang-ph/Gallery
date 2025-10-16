@@ -5,27 +5,25 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-# ## Data
+using Pkg
+Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
+Pkg.update("TuringCallbacks")
+Pkg.add("Turing")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
 
-import CSV
-
-using DataFrames
-using Random
 using Turing
+using Coinfer
+using DataFrames
+using CSV
 
-Random.seed!(1)
+flow = Coinfer.ServerlessBayes.current_workflow()
 
-data_path = joinpath(@__DIR__, "data.csv")
-
-function read_data(data_path)
-    df = CSV.read(data_path, DataFrame; delim=';')
+function interpret_data(data)
+    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
     df = filter(row -> row.age >= 18, df);
-    return df
+    return [df.height]
 end
-
-# For df, see Section [df](#df).
-
-# ## Model
 
 @model function line(height)
     μ ~ Normal(178, 20)
@@ -34,18 +32,4 @@ end
     height ~ Normal(μ, σ)
 end
 
-function get_input(_input)
-    if _input === nothing
-        _data_path = data_path
-    else
-        _data_path = _input.file
-    end
-    return read_data(_data_path)
-end
-
-function model(_input)
-    _input = get_input(_input)
-    _model = line(_input.height)
-    return _model
-end
-
+flow.model = line

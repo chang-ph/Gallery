@@ -5,10 +5,6 @@ If you don't provide any data in the workflow, that data will be used by default
 If you want to provide data, it should be provided in the same format as the default data and attached to the workflow.
 """
 
-using Pkg
-Pkg.add("CSV")
-Pkg.add("DataFrames")
-
 using Turing
 using Coinfer
 using DataFrames

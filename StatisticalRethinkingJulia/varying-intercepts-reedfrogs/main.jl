@@ -7,10 +7,6 @@ If you want to provide data, it should be provided in the same format as the def
 
 using Pkg
 Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
-Pkg.update("TuringCallbacks")
-Pkg.add("Turing")
-Pkg.add("CSV")
-Pkg.add("DataFrames")
 
 using Coinfer
 using DataFrames

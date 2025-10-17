@@ -6,8 +6,6 @@ If you want to provide data, it should be provided in the same format as the def
 """
 
 using Pkg
-Pkg.add("CSV")
-Pkg.add("DataFrames")
 
 using Turing
 using Coinfer

@@ -6,13 +6,9 @@ using Pkg
 Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
 Pkg.update("TuringCallbacks")
 Pkg.add("Turing")
-Pkg.add("CSV")
-Pkg.add("DataFrames")
 
 using Turing
 using Coinfer
-using DataFrames
-using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 

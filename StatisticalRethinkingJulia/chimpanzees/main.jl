@@ -15,11 +15,6 @@ using StatsFuns
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    return [df.pulled_left, df.condition, df.prosoc_left]
-end
-
 @model function m10_3(y, x₁, x₂)
     α ~ Normal(0, 10)
     βp ~ Normal(0, 10)

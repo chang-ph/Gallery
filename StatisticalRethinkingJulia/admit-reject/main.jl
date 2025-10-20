@@ -16,22 +16,16 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    return [df.admit, df.reject]
-end
-
-
 @model function m_pois(admit, reject)
-   α₁ ~ Normal(0,100)
-   α₂ ~ Normal(0,100)
+    α₁ ~ Normal(0, 100)
+    α₂ ~ Normal(0, 100)
 
-   for i ∈ 1:length(admit)
-       λₐ = exp(α₁)
-       λᵣ = exp(α₂)
-       admit[i] ~ Poisson(λₐ)
-       reject[i] ~ Poisson(λᵣ)
-   end
+    for i in 1:length(admit)
+        λₐ = exp(α₁)
+        λᵣ = exp(α₂)
+        admit[i] ~ Poisson(λₐ)
+        reject[i] ~ Poisson(λᵣ)
+    end
 end;
 
 flow.model = m_pois

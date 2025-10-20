@@ -15,13 +15,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    df.log_pop = log.(df.population)
-    df.society = 1:nrow(df)
-    return (df.total_tools, df.log_pop, df.society)
-end
-
 @model function m12_6(total_tools, log_pop, society)
     N = length(total_tools)
 

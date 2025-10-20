@@ -10,11 +10,6 @@ using Coinfer
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    y = [-1, 1]
-    return [y]
-end
-
 @model function m8_2(y)
     α ~ Flat() ## improper prior with pobability one everywhere
     σ ~ FlatPos(0.0) ## improper prior with probability one everywhere above 0.0

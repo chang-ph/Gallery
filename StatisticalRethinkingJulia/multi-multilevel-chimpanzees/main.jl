@@ -15,11 +15,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    return (df.pulled_left, df.actor, df.block, df.condition, df.prosoc_left)
-end
-
 @model function m12_5(pulled_left, actor, block, condition, prosoc_left)
     ## Total num of y
     N = length(pulled_left)
@@ -41,8 +36,7 @@ end
     βp ~ Normal(0, 10)
     βpC ~ Normal(0, 10)
 
-    logitp = α .+ α_actor[actor] + α_block[block] .+
-            (βp .+ βpC * condition) .* prosoc_left
+    logitp = α .+ α_actor[actor] + α_block[block] .+ (βp .+ βpC * condition) .* prosoc_left
 
     pulled_left .~ BinomialLogit.(1, logitp)
 end;

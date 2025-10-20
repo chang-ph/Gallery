@@ -15,12 +15,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    df.tank = 1:nrow(df)
-    return (df.density, df.tank, df.surv)
-end
-
 @model function m12_2(density, tank, surv)
     σ ~ truncated(Cauchy(0, 1), 0, Inf)
     α ~ Normal(0, 1)

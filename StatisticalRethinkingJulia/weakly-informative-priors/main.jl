@@ -10,11 +10,6 @@ using Coinfer
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    y = [-1,1]
-    return [y]
-end
-
 @model function m8_3(y)
     α ~ Normal(1, 10)
     σ ~ truncated(Cauchy(0, 1), 0, Inf)

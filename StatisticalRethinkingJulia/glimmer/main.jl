@@ -12,12 +12,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    x = repeat([-1], 9); append!(x, repeat([1],11));
-    y = repeat([0], 10); append!(y, repeat([1],10));
-    return (x, y)
-end
-
 @model function m_good_stan(x, y)
     α ~ Normal(0, 10)
     β ~ Normal(0, 10)

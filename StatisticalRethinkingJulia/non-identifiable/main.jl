@@ -10,16 +10,11 @@ using Coinfer
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    y = rand(Normal(0,1), 100);
-    return [y]
-end
-
 @model function m8_4(y)
     ## Can't really set a Uniform[-Inf,Inf] on σ
     α₁ ~ Uniform(-3000, 1000)
     α₂ ~ Uniform(-1000, 3000)
-    σ ~ truncated(Cauchy(0,1), 0, Inf)
+    σ ~ truncated(Cauchy(0, 1), 0, Inf)
 
     y ~ Normal(α₁ + α₂, σ)
 end

@@ -19,27 +19,14 @@ using Statistics: mean
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-
-    df.log_pop = log.(df.population)
-    df.contact_high = [contact == "high" ? 1 : 0 for contact in df.contact]
-
-    # New col where we center(!) the log_pop values
-    mean_log_pop = mean(df.log_pop)
-    df.log_pop_c = map(x -> x - mean_log_pop, df.log_pop)
-    return [df.total_tools, df.log_pop_c, df.contact_high]
-end
-
 @model function m10_10stan_c(total_tools, log_pop_c, contact_high)
     α ~ Normal(0, 100)
     βp ~ Normal(0, 1)
     βc ~ Normal(0, 1)
     βpc ~ Normal(0, 1)
 
-    for i ∈ 1:length(total_tools)
-        λ = exp(α + βp*log_pop_c[i] + βc*contact_high[i] +
-            βpc*contact_high[i]*log_pop_c[i])
+    for i in 1:length(total_tools)
+        λ = exp(α + βp*log_pop_c[i] + βc*contact_high[i] + βpc*contact_high[i]*log_pop_c[i])
         total_tools[i] ~ Poisson(λ)
     end
 end;

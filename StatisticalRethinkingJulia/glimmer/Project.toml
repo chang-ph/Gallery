@@ -1,6 +1,6 @@
 [deps]
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 
 [coinfer]
-entrance_file="main.jl"
-entrance_func="model"
+entrance_file = "main.jl"

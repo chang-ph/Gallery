@@ -15,13 +15,8 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame);
-    return (df.cafe, df.afternoon, df.wait)
-end
-
 @model function m13_1(cafe, afternoon, wait)
-    Rho ~ LKJ(2, 1.)
+    Rho ~ LKJ(2, 1.0)
     sigma ~ truncated(Cauchy(0, 2), 0, Inf)
     sigma_cafe ~ filldist(truncated(Cauchy(0, 2), 0, Inf), 2)
     a ~ Normal(0, 10)

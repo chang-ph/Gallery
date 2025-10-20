@@ -12,15 +12,11 @@ using Coinfer
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-  return [1.5, 2]
-end
-
 @model function gdemo(x, y)
-  s ~ InverseGamma(2, 3)
-  m ~ Normal(0, sqrt(s))
-  x ~ Normal(m, sqrt(s))
-  y ~ Normal(m, sqrt(s))
+    s ~ InverseGamma(2, 3)
+    m ~ Normal(0, sqrt(s))
+    x ~ Normal(m, sqrt(s))
+    y ~ Normal(m, sqrt(s))
 end
 
 flow.model = gdemo

@@ -17,26 +17,19 @@ using StatsFuns: logistic
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    return [df.admit, df.applications]
-end
-
-
 @model function m11_5(admit, applications)
-  θ ~ truncated(Exponential(1), 0, Inf)
-  α ~ Normal(0, 2)
+    θ ~ truncated(Exponential(1), 0, Inf)
+    α ~ Normal(0, 2)
 
-  ## alpha and beta for the BetaBinomial must be provided.
-  ## The two parameterizations are related by
-  ## alpha = prob * theta, and beta = (1-prob) * theta.
-  ## See https://github.com/rmcelreath/rethinking/blob/master/man/dbetabinom.Rd
+    ## alpha and beta for the BetaBinomial must be provided.
+    ## The two parameterizations are related by
+    ## alpha = prob * theta, and beta = (1-prob) * theta.
+    ## See https://github.com/rmcelreath/rethinking/blob/master/man/dbetabinom.Rd
 
-  prob = logistic(α)
-  alpha = prob * θ
-  beta = (1 - prob) * θ
-  admit .~ BetaBinomial.(applications, alpha, beta)
+    prob = logistic(α)
+    alpha = prob * θ
+    beta = (1 - prob) * θ
+    admit .~ BetaBinomial.(applications, alpha, beta)
 end
 
 flow.model = m11_5

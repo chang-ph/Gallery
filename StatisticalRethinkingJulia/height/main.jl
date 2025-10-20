@@ -15,12 +15,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    df = filter(row -> row.age >= 18, df);
-    return [df.height]
-end
-
 @model function line(height)
     μ ~ Normal(178, 20)
     σ ~ Uniform(0, 50)

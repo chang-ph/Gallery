@@ -15,15 +15,7 @@ using Random
 using Turing
 using StatsFuns: logistic
 
-
 flow = Coinfer.ServerlessBayes.current_workflow()
-
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';');
-    @assert size(df) == (48, 5) ## hide
-    df.tank_index = 1:nrow(df)
-    return (df.density, df.tank_index, df.surv)
-end
 
 @model function reedfrogs(Nᵢ, i, Sᵢ)
     αₜₐₙₖ ~ filldist(Normal(0, 1.5), length(i))

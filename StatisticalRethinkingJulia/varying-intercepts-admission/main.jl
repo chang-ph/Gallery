@@ -19,18 +19,8 @@ using Turing
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-
-    dept_map = Dict(key => idx for (idx, key) in enumerate(unique(df.dept)))
-    df.male = [g == "male" ? 1 : 0 for g in df.gender]
-    df.dept_id = [dept_map[de] for de in df.dept]
-    return (df.applications, df.dept_id, df.male, df.admit)
-end
-
-
 @model function m13_3(applications, dept_id, male, admit)
-    Rho ~ LKJ(2, 2.)
+    Rho ~ LKJ(2, 2.0)
     sigma_dept ~ filldist(truncated(Cauchy(0, 2), 0, Inf), 2)
     bm ~ Normal(0, 1)
     a ~ Normal(0, 1)

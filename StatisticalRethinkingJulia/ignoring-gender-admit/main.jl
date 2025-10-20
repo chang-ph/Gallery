@@ -15,16 +15,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-
-    dept_map = Dict(key => idx for (idx, key) in enumerate(unique(df.dept)))
-    df.male = [g == "male" ? 1 : 0 for g in df.gender]
-    df.dept_id = [dept_map[de] for de in df.dept]
-
-    return (df.applications, df.dept_id, df.male, df.admit)
-end
-
 @model function m13_4(applications, dept_id, male, admit)
     sigma_dept ~ truncated(Cauchy(0, 2), 0, Inf)
     a ~ Normal(0, 10)

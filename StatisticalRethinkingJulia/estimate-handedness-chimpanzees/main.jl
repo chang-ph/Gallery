@@ -13,14 +13,6 @@ using StatsFuns
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    first(df, 10)
-    return (df.pulled_left, df.actor, df.condition, df.prosoc_left)
-end
-
-
-
 @model function m10_4(y, actors, x₁, x₂)
     ## Number of unique actors in the data set
     N_actor = length(unique(actors))

@@ -12,10 +12,6 @@ using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 
-function interpret_data(data)
-    return [9, 6]
-end
-
 @model function globe_toss(n, k)
     θ ~ Beta(1, 1)
     k ~ Binomial(n, θ)

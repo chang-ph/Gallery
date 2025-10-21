@@ -32,7 +32,7 @@ data = interpret_data(flow.data) # user defined function to interpret input data
 m = flow.model(data...)
 
 parallel_algorithm = AbstractMCMC.MCMCSerial()
-iteration_count = 10
+iteration_count = 1000
 num_chains = 1
 
 Coinfer.ServerlessBayes.sample(

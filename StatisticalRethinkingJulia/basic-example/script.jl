@@ -8,7 +8,6 @@ COINFER_ENGINE = "fargate"  # fargate/lambda
 #   If you use MCMCDistributed, you need to add the correct `-p x` where x is the number of processes.
 COINFER_JULIA_ARGS = []
 
-
 using StableRNGs
 using AbstractMCMC
 

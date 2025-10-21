@@ -7,8 +7,6 @@ Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
 
 using Turing
 using Coinfer
-using DataFrames
-using CSV
 
 flow = Coinfer.ServerlessBayes.current_workflow()
 

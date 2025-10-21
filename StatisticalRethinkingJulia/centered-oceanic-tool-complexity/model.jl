@@ -9,12 +9,10 @@ If you want to provide data, it should be provided in the same format as the def
 
 using Pkg
 Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
-Pkg.update("TuringCallbacks")
+
 
 using Turing
 using Coinfer
-using DataFrames
-using CSV
 using Statistics: mean
 
 flow = Coinfer.ServerlessBayes.current_workflow()

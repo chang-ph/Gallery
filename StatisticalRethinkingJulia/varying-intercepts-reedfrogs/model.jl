@@ -9,8 +9,6 @@ using Pkg
 Pkg.develop(; path=ARGS[1])  # load Coinfer.jl
 
 using Coinfer
-using DataFrames
-using CSV
 using Random
 using Turing
 using StatsFuns: logistic

@@ -9,8 +9,6 @@ using Pkg
 
 using Turing
 using Coinfer
-using DataFrames
-using CSV
 using StatsFuns
 
 flow = Coinfer.ServerlessBayes.current_workflow()

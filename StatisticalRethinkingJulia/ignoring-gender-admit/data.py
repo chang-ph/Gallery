@@ -22,7 +22,7 @@ from Coinfer import current_workflow
 #     return (df.applications, df.dept_id, df.male, df.admit)
 # end
 
- def interpret_data(data):
+def interpret_data(data):
     df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     dept_map = {key: idx for idx, key in enumerate(df['dept'].unique(), 1)}

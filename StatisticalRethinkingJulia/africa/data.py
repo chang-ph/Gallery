@@ -16,5 +16,7 @@ def interpret_data(data):
     df = df.dropna()
     return [df['log_gdp'], df['rugged'], df['cont_africa']]
 
+print("#####1")
 flow = current_workflow()
 flow.parse_data(interpret_data)
+print("#####2")

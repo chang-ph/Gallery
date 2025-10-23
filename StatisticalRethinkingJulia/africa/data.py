@@ -2,6 +2,8 @@
 # dependencies = [
 #   "pandas",
 #   "numpy",
+#   "bokeh",
+#   "requests",
 # ]
 # ///
 

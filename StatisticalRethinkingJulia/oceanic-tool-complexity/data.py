@@ -22,7 +22,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     df['log_pop'] = np.log(df['population'])
     df['contact_high'] = df['contact'].apply(lambda x: 1 if x == 'high' else 0)

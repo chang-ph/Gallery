@@ -18,7 +18,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data))
+    df = pd.read_csv(StringIO(data.decode("utf-8")))
     return (df['cafe'], df['afternoon'], df['wait'])
 
 flow = current_workflow()

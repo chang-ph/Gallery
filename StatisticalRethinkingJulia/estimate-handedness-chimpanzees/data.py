@@ -20,7 +20,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
     print(df.head(10))
     return (df['pulled_left'], df['actor'], df['condition'], df['prosoc_left'])
 

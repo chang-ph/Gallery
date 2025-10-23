@@ -19,7 +19,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
     df['tank'] = range(1, len(df) + 1)
     return (df['density'], df['tank'], df['surv'])
 

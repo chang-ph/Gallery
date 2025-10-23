@@ -21,7 +21,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
     df['log_pop'] = np.log(df['population'])
     df['society'] = range(1, len(df) + 1)
     return (df['total_tools'], df['log_pop'], df['society'])

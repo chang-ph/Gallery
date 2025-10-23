@@ -28,7 +28,7 @@ from Coinfer import current_workflow
 # end
 
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     df['log_gdp'] = np.log(df['rgdppc_2000'])
     df.dropna(inplace=True)

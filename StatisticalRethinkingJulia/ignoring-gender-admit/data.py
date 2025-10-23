@@ -23,7 +23,7 @@ from Coinfer import current_workflow
 # end
 
  def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     dept_map = {key: idx for idx, key in enumerate(df['dept'].unique(), 1)}
     df['male'] = (df['gender'] == 'male').astype(int)

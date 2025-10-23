@@ -24,7 +24,7 @@ from Coinfer import current_workflow
 
 # Python implementation
 def interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     # Create department mapping
     dept_map = {key: idx + 1 for idx, key in enumerate(df['dept'].unique())}  # +1 to match Julia's 1-based indexing

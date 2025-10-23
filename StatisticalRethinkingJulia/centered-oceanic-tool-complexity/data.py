@@ -27,7 +27,7 @@ from Coinfer import current_workflow
 
 # Python implementation
 function interpret_data(data):
-    df = pd.read_csv(StringIO(data), delimiter=';')
+    df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     df['log_pop'] = np.log(df['population'])
     df['contact_high'] = np.where(df['contact'] == "high", 1, 0)

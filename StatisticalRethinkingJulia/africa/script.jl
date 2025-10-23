@@ -4,7 +4,7 @@ using AbstractMCMC
 flow = Coinfer.ServerlessBayes.current_workflow()
 m = flow.model(flow.parsed_data...)
 
-parallel_algorithm = eval(flow.settings["sampling_params"]["parallel_algorithm"])
+parallel_algorithm = Meta.parse(flow.settings["sampling_params"]["parallel_algorithm"]) |> eval
 iteration_count = flow.settings["sampling_params"]["iteration_count"]
 num_chains = flow.settings["sampling_params"]["num_chains"]
 

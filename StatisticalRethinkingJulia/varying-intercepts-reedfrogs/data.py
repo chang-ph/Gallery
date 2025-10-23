@@ -1,4 +1,3 @@
-
 # /// script
 # dependencies = [
 #   "pandas",
@@ -13,12 +12,19 @@ import numpy as np
 from io import StringIO
 from Coinfer import current_workflow
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';');
-    @assert size(df) == (48, 5) ## hide
-    df.tank_index = 1:nrow(df)
-    return (df.density, df.tank_index, df.surv)
-end
+# Julia code:
+# function interpret_data(data)
+#     df = CSV.read(IOBuffer(data), DataFrame; delim=';');
+#     @assert size(df) == (48, 5) ## hide
+#     df.tank_index = 1:nrow(df)
+#     return (df.density, df.tank_index, df.surv)
+# end
+
+def interpret_data(data):
+    df = pd.read_csv(StringIO(data), delimiter=';')
+    assert df.shape == (48, 5)  # hide
+    df['tank_index'] = range(1, len(df) + 1)
+    return (df['density'], df['tank_index'], df['surv'])
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

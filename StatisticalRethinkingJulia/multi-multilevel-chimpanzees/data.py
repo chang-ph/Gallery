@@ -1,4 +1,3 @@
-
 # /// script
 # dependencies = [
 #   "pandas",
@@ -13,10 +12,14 @@ import numpy as np
 from io import StringIO
 from Coinfer import current_workflow
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
-    return (df.pulled_left, df.actor, df.block, df.condition, df.prosoc_left)
-end
+# function interpret_data(data)
+#     df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+#     return (df.pulled_left, df.actor, df.block, df.condition, df.prosoc_left)
+# end
+
+def interpret_data(data):
+    df = pd.read_csv(StringIO(data), sep=';')
+    return (df['pulled_left'], df['actor'], df['block'], df['condition'], df['prosoc_left'])
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

@@ -1,4 +1,3 @@
-
 # /// script
 # dependencies = [
 #   "pandas",
@@ -13,14 +12,22 @@ import numpy as np
 from io import StringIO
 from Coinfer import current_workflow
 
-function interpret_data(data)
-    df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+# function interpret_data(data)
+#     df = CSV.read(IOBuffer(data), DataFrame; delim=';')
+#
+#     df.log_pop = log.(df.population)
+#     df.contact_high = [contact == "high" ? 1 : 0 for contact in df.contact]
+#
+#     return (df.total_tools, df.log_pop, df.contact_high)
+# end
 
-    df.log_pop = log.(df.population)
-    df.contact_high = [contact == "high" ? 1 : 0 for contact in df.contact]
+def interpret_data(data):
+    df = pd.read_csv(StringIO(data), delimiter=';')
 
-    return (df.total_tools, df.log_pop, df.contact_high)
-end
+    df['log_pop'] = np.log(df['population'])
+    df['contact_high'] = df['contact'].apply(lambda x: 1 if x == 'high' else 0)
+
+    return (df['total_tools'], df['log_pop'], df['contact_high'])
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

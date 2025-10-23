@@ -26,7 +26,7 @@ from Coinfer import current_workflow
 # end
 
 # Python implementation
-function interpret_data(data):
+def interpret_data(data):
     df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
 
     df['log_pop'] = np.log(df['population'])

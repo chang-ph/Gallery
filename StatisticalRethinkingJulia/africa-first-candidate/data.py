@@ -39,7 +39,7 @@ def interpret_data(data):
     df['rugged_std'] = df['rugged'] / df['rugged'].max()
 
     df.head(8)
-    return [df['log_gdp_std'], df['rugged_std'], df['rugged_std'].mean()]
+    return [df['log_gdp_std'].to_list(), df['rugged_std'].to_list(), df['rugged_std'].mean()]
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

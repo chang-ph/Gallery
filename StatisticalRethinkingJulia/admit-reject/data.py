@@ -19,7 +19,7 @@ from Coinfer import current_workflow
 
 def interpret_data(data):
     df = pd.read_csv(StringIO(data.decode("utf-8")), delimiter=';')
-    return [df['admit'], df['reject']]
+    return [df['admit'].to_list(), df['reject'].to_list()]
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

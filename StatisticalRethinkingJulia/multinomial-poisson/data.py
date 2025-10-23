@@ -31,7 +31,7 @@ def interpret_data(data):
     df['male'] = [1 if g == "male" else 0 for g in df['gender']]
     df['dept_id'] = [dept_map[de] for de in df['dept']]
 
-    return (df['applications'], df['dept_id'], df['male'], df['admit'])
+    return (df['applications'].to_list(), df['dept_id'].to_list(), df['male'].to_list(), df['admit'].to_list())
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

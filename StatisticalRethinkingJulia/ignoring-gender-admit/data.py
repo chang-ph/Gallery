@@ -29,7 +29,7 @@ from Coinfer import current_workflow
     df['male'] = (df['gender'] == 'male').astype(int)
     df['dept_id'] = df['dept'].map(dept_map)
 
-    return (df['applications'], df['dept_id'], df['male'], df['admit'])
+    return (df['applications'].to_list(), df['dept_id'].to_list(), df['male'].to_list(), df['admit'].to_list())
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

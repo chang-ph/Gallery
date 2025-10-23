@@ -51,7 +51,7 @@ def interpret_data(data):
 
     dsim['p_nopool'] = dsim['s'] / dsim['ni']
 
-    return (dsim['pond'], dsim['s'], dsim['ni'])
+    return (dsim['pond'].to_list(), dsim['s'].to_list(), dsim['ni'].to_list())
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

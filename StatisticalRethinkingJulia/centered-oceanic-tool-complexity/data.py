@@ -35,7 +35,7 @@ function interpret_data(data):
     # New col where we center(!) the log_pop values
     mean_log_pop = df['log_pop'].mean()
     df['log_pop_c'] = df['log_pop'] - mean_log_pop
-    return [df['total_tools'], df['log_pop_c'], df['contact_high']]
+    return [df['total_tools'].to_list(), df['log_pop_c'].to_list(), df['contact_high'].to_list()]
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

@@ -16,7 +16,7 @@ def interpret_data(data: bytes):
     df = pd.read_csv(StringIO(data.decode('utf-8')), sep=';')
     df['log_gdp'] = np.log(df['rgdppc_2000'])
     df = df.dropna()
-    return [df['log_gdp'], df['rugged'], df['cont_africa']]
+    return [df['log_gdp'].to_list(), df['rugged'].to_list(), df['cont_africa'].to_list()]
 
 print("#####1")
 flow = current_workflow()

@@ -4,9 +4,11 @@ using AbstractMCMC
 flow = Coinfer.ServerlessBayes.current_workflow()
 m = flow.model(flow.parsed_data...)
 
-parallel_algorithm = AbstractMCMC.MCMCSerial()
-iteration_count = 1000
-num_chains = 1
+parallel_algorithm = eval(
+    Meta.parse(flow.settings["sampling_params"]["parallel_algorithm"])
+)
+iteration_count = flow.settings["sampling_params"]["iteration_count"]
+num_chains = flow.settings["sampling_params"]["num_chains"]
 
 Coinfer.ServerlessBayes.sample(
     StableRNG(Int(floor(time()))),

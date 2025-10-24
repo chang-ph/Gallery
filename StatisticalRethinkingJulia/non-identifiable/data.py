@@ -12,11 +12,14 @@ import numpy as np
 from io import StringIO
 from Coinfer import current_workflow
 
-def interpret_data(data: bytes):
-    df = pd.read_csv(StringIO(data.decode('utf-8')), sep=';')
-    df['log_gdp'] = np.log(df['rgdppc_2000'])
-    df = df.dropna()
-    return [df['log_gdp'].to_list(), df['rugged'].to_list(), df['cont_africa'].to_list()]
+# function interpret_data(data)
+#     y = rand(Normal(0, 1), 100);
+#     return [y]
+# end
+
+def interpret_data(data):
+    y = np.random.normal(0, 1, 100)
+    return [y.tolist()]
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

@@ -19,7 +19,7 @@ from Coinfer import current_workflow
 
 def interpret_data(data):
     y = np.random.normal(0, 1, 100)
-    return [y]
+    return [y.tolist()]
 
 flow = current_workflow()
 flow.parse_data(interpret_data)

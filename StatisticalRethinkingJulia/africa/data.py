@@ -18,7 +18,5 @@ def interpret_data(data: bytes):
     df = df.dropna()
     return [df['log_gdp'].to_list(), df['rugged'].to_list(), df['cont_africa'].to_list()]
 
-print("#####1")
 flow = current_workflow()
 flow.parse_data(interpret_data)
-print("#####2")

@@ -1,0 +1,18 @@
+files: ^StatisticalRethinkingJulia/
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+    - id: check-yaml
+    - id: end-of-file-fixer
+    - id: trailing-whitespace
+- repo: https://github.com/qiaojunfeng/pre-commit-julia-format
+  rev: v0.2.0                # use the most recent version
+  hooks:
+  - id: julia-format         # formatter for Julia code
+# - repo: local
+#   hooks:
+#     - id: julia-formatter
+#       name: "Format Julia Code"
+#       language: system
+#       entry: julia -e 'using Pkg; Pkg.add("JuliaFormatter"); using JuliaFormatter; format("StatisticalRethinkingJulia/")'
